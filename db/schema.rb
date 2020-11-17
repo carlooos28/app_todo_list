@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_17_070722) do
+ActiveRecord::Schema.define(version: 2020_11_17_084916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,37 @@ ActiveRecord::Schema.define(version: 2020_11_17_070722) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "share_item_groups", force: :cascade do |t|
+    t.bigint "group_id"
+    t.bigint "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_share_item_groups_on_group_id"
+    t.index ["task_id"], name: "index_share_item_groups_on_task_id"
+  end
+
+  create_table "share_item_users", force: :cascade do |t|
+    t.bigint "task_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_share_item_users_on_task_id"
+    t.index ["user_id"], name: "index_share_item_users_on_user_id"
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.date "initial_date"
+    t.date "final_date"
+    t.integer "status", default: 0
+    t.integer "type_share_item", default: 0
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -37,5 +68,10 @@ ActiveRecord::Schema.define(version: 2020_11_17_070722) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "share_item_groups", "groups"
+  add_foreign_key "share_item_groups", "tasks"
+  add_foreign_key "share_item_users", "tasks"
+  add_foreign_key "share_item_users", "users"
+  add_foreign_key "tasks", "users"
   add_foreign_key "users", "groups"
 end

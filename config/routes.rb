@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   end
 
   resources :groups, only: [:index, :show, :create, :update, :destroy]
-
+  resources :tasks, only: [:index, :show, :create, :update, :destroy]
+  get '/task_list_by_group', to: 'tasks#task_list_by_group', as: 'task_list_by_group'
+  get '/task_list_by_user', to: 'tasks#task_list_by_user', as: 'task_list_by_user'
 
 end
